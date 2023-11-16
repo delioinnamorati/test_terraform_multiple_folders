@@ -36,25 +36,21 @@ jobs:
          terraform_version: 1.6.0
     # Tf fmt
      - name: Terraform format
-       id: fmt
        run: terraform fmt -recursive -check
 
     # Tf validate
      - name: terraform validate prod
        uses: dflook/terraform-validate@v1
-       id: validate
        with:
         path: ./terraform/prod
 
      - name: terraform validate preprod
        uses: dflook/terraform-validate@v1
-       id: validate
        with:
         path: ./terraform/preprod
 
      - name: terraform validate dev
        uses: dflook/terraform-validate@v1
-       id: validate
        with:
         path: ./terraform/dev
 
