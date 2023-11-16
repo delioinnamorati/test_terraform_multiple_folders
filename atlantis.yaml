@@ -5,9 +5,12 @@ projects:
 # If two or more projects have the same dir and workspace, they must also have
 # a 'name' key to differentiate them.
 - name: dev
+<<<<<<< Updated upstream
   #autoplan:
     #enabled: false
     #when_modified: ['*.tf*']
+=======
+>>>>>>> Stashed changes
   repo_locking: true
   dir: terraform/dev
   workflow: custom
@@ -18,7 +21,10 @@ projects:
 - name: prod
   repo_locking: true
   dir: terraform/prod
+<<<<<<< Updated upstream
   #autoplan:
     #enabled: false
     #when_modified: ['*.tf*']
+=======
+>>>>>>> Stashed changes
   workflow: custom
