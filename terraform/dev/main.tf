@@ -5,24 +5,24 @@ terraform {
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "~>5.25.0"
     }
   }
 }
 provider "aws" {
-    region = "us-east-1"
-    #assume_role {
-        #role_arn = "arn:aws:iam::${var.account_id}:role/${var.role}"
-    #}
+  region = "us-east-1"
+  #assume_role {
+  #role_arn = "arn:aws:iam::${var.account_id}:role/${var.role}"
+  #}
 }
 terraform {
   backend "s3" {
     dynamodb_table = "terraform_state"
-    key = "terraform.tfstate"
-    bucket = "dev-test123-example1-app1"
-    region="us-east-1"
-    encrypt=true
+    key            = "terraform.tfstate"
+    bucket         = "dev-test123-example1-app1"
+    region         = "us-east-1"
+    encrypt        = true
   }
 }
 resource "aws_vpc" "main" {
