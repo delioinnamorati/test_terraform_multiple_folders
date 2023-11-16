@@ -4,6 +4,7 @@ version: 3
 projects:
 # If two or more projects have the same dir and workspace, they must also have
 # a 'name' key to differentiate them.
+# Don't disable autoplan.. this is due to bug https://github.com/runatlantis/atlantis/issues/1714
 - name: dev
   repo_locking: true
   dir: terraform/dev
