@@ -10,14 +10,6 @@ repos:
   # By default, all branches are matched
   branch: /.*/
 
-  #pre_workflow_hooks:
- 
-    #- description: "Running some checks"
-      #run: |
-       # if [ "${BASE_BRANCH_NAME}" = "develop" -a "${PROJECT_NAME}" = "prod" ]; then 
-           # echo "Can't run prod pipeline for develop branch"
-           # exit 1
-        #fi
   # repo_config_file specifies which repo config file to use for this repo.
   # By default, atlantis.yaml is used.
   repo_config_file: ./atlantis.yaml
@@ -33,34 +25,22 @@ repos:
   # Requiring PR is approved and mergeable (all checks are green e.g. CI) before an applicable subcommand.
   import_requirements: [approved, mergeable, undiverged]
 
-  # workflow sets the workflow for all repos that match.
-  # This workflow must be defined in the workflows section.
-  # workflow: custom
-
   # allowed_overrides specifies which keys can be overridden by this repo in
   # its atlantis.yaml file.
-  allowed_overrides: [workflow,repo_locking]
+  allowed_overrides: [workflow]
 
   # allowed_workflows specifies which workflows the repos that match 
   # are allowed to select.
   allowed_workflows: [custom]
 
-  # allow_custom_workflows defines whether this repo can define its own
-  # workflows. If false (default), the repo can only use server-side defined
-  # workflows.
-  # allow_custom_workflows: true
+  # repo_locking defines whether lock repository when planning.
+  # If true (default), atlantis try to get a lock.
+  repo_locking: true
 
   # delete_source_branch_on_merge defines whether the source branch would be deleted on merge
   # If false (default), the source branch won't be deleted on merge
-  # delete_source_branch_on_merge: true
+  delete_source_branch_on_merge: true
 
-  # repo_locking defines whether lock repository when planning.
-  # If true (default), atlantis try to get a lock.
-  # repo_locking: true
-
-  # custom_policy_check defines whether policy checking tools besides Conftest are enabled in checks
-  # If false (default), only Conftest JSON output is allowed
-  #custom_policy_check: false
 
   # pre_workflow_hooks defines arbitrary list of scripts to execute before workflow execution.
   #pre_workflow_hooks: 
@@ -70,16 +50,11 @@ repos:
   #post_workflow_hooks: 
     #- run: my-post-workflow-hook-command arg1
 
-  # policy_check defines if policy checking should be enable on this repository.
-  #policy_check: false
-
-
 # workflows lists server-side custom workflows. For now just one flexible custom workflow, but can create one per env if needed.
 workflows:
-  custom: 
+  custom:
     plan: 
       steps: 
-        - init
         - plan: 
             extra_args:
               - -input=false

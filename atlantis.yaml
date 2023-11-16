@@ -6,14 +6,11 @@ projects:
 # a 'name' key to differentiate them.
 # Don't disable autoplan.. this is due to bug https://github.com/runatlantis/atlantis/issues/1714
 - name: dev
-  repo_locking: true
   dir: terraform/dev
   workflow: custom
 - name: preprod
-  repo_locking: true
   dir: terraform/preprod
   workflow: custom
 - name: prod
-  repo_locking: true
   dir: terraform/prod
   workflow: custom
