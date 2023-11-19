@@ -27,7 +27,7 @@ repos:
 
   # allowed_overrides specifies which keys can be overridden by this repo in
   # its atlantis.yaml file.
-  allowed_overrides: [workflow]
+  allowed_overrides: [workflow, repo_locking]
 
   # allowed_workflows specifies which workflows the repos that match 
   # are allowed to select.
@@ -54,7 +54,13 @@ repos:
 workflows:
   custom:
     plan: 
-      steps: 
+      steps:
+        - init
+        - env:
+            name: AWS_ACCOUNT_ID
+            command: "aws s3 cp s3://atlantis-account-repo-config/repo_account_id_config.json - | jq -r '.[] | select (.repo_name=='${BASE_REPO_NAME}') | .account_id"
+        - run: 'if [ $AWS_ACCOUNT_ID = "123456789"]; then echo account matches && exit 1; fi;'
+        - run: 'if [ "${ENVIRONMENT}" = "prod" -a "${BASE_BRANCH_NAME}" = "develop" ]; then exit 1; fi;'
         - plan: 
             extra_args:
               - -input=false
