@@ -65,10 +65,10 @@ workflows:
 
         - env: 
             name: TF_ACCOUNT_ID
-            command: '/home/delio/test_terraform_multiple_folders/test.sh'
+            command: '/home/delio/test_terraform_multiple_folders/tf_account_id.sh'
   
         - run: echo "${TF_ACCOUNT_ID}" "${S3_ACCOUNT_ID}"
-        - run: 'if [ "${S3_ACCOUNT_ID}" = "${TF_ACCOUNT_ID}" ]; then echo they match!!! && exit 1; fi;'
+        - run: 'if [ "${S3_ACCOUNT_ID}" != "${TF_ACCOUNT_ID}" ]; then echo they match!!! && exit 1; fi;'
         - plan: 
             extra_args:
               - -input=false

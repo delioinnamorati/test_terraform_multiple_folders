@@ -1,0 +1,85 @@
+name: "Terraform Infrastructure Change Management Pipeline with GitHub Actions"
+ 
+on:
+ push:
+   branches:
+   - main
+   paths:
+   - terraform/**
+ pull_request:
+   branches:
+   - main
+   paths:
+   - terraform/**
+ 
+env:
+ # verbosity setting for Terraform logs
+ TF_LOG: INFO
+ 
+jobs:
+ terraform:
+   name: "Terraform Infrastructure Change Management"
+   runs-on: ubuntu-latest
+   defaults:
+     run:
+       shell: bash
+       # We keep Terraform files in the terraform directory.
+       #working-directory: ./terraform
+ 
+   steps:
+     - name: Checkout the repository to the runner
+       uses: actions/checkout@v2
+ 
+     - name: Setup Terraform with specified version on the runner
+       uses: hashicorp/setup-terraform@v2
+       with:
+         terraform_version: 1.6.0
+    # Tf fmt
+     - name: Terraform format
+       run: terraform fmt -recursive -check
+
+    # Tf validate
+     - name: terraform validate prod
+       uses: dflook/terraform-validate@v1
+       with:
+        path: ./terraform/prod
+
+     - name: terraform validate preprod
+       uses: dflook/terraform-validate@v1
+       with:
+        path: ./terraform/preprod
+
+     - name: terraform validate dev
+       uses: dflook/terraform-validate@v1
+       with:
+        path: ./terraform/dev
+
+     - name: Validate failed
+       if: ${{ failure() && steps.validate.outputs.failure-reason == 'validate-failed' }}
+       run: echo "terraform validate failed"
+
+    # Tflint
+     - name: Cache plugin dir
+       uses: actions/cache@v2
+       with:
+        path: ~/.tflint.d/plugins
+        key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+
+     - name: Setup TFLint
+       uses: terraform-linters/setup-tflint@v3
+       with:
+        tflint_version: v0.44.1
+     - name: Show version
+       run: tflint --version
+
+     - name: Init TFLint
+       run: tflint --init --config=.tflint.hcl
+      
+     - name: Run TFLint
+       run: tflint --recursive --minimum-failure-severity=warning -f compact
+
+    # Tfsec
+     - name: Run Tfsec
+       uses: aquasecurity/tfsec-action@v1.0.0
+
+    
