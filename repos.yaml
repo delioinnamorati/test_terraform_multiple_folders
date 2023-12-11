@@ -27,7 +27,7 @@ repos:
 
   # allowed_overrides specifies which keys can be overridden by this repo in
   # its atlantis.yaml file.
-  allowed_overrides: [workflow]
+  allowed_overrides: [workflow, repo_locking]
 
   # allowed_workflows specifies which workflows the repos that match 
   # are allowed to select.
@@ -54,7 +54,21 @@ repos:
 workflows:
   custom:
     plan: 
-      steps: 
+      steps:
+        - init
+        #- env:
+            #name: REPO_NAME
+            #command: 'if [ "${BASE_REPO_NAME}" = "test_terraform_multiple_folders" ]; then echo exiting && exit 1; fi;'
+        - env:
+            name: S3_ACCOUNT_ID
+            command: '/home/delio/test_terraform_multiple_folders/s3_account_id.sh "${BASE_REPO_NAME}"'
+
+        - env: 
+            name: TF_ACCOUNT_ID
+            command: '/home/delio/test_terraform_multiple_folders/tf_account_id.sh'
+  
+        - run: echo "${TF_ACCOUNT_ID}" "${S3_ACCOUNT_ID}"
+        - run: 'if [ "${S3_ACCOUNT_ID}" != "${TF_ACCOUNT_ID}" ]; then echo they match!!! && exit 1; fi;'
         - plan: 
             extra_args:
               - -input=false
