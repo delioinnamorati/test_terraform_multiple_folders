@@ -39,7 +39,7 @@ jobs:
           path: terraform/prod
       - name: test output
         run: > 
-            bash -c #/bin/bash
+            bash -c '#/bin/bash
 
             IFS=' ' read -a arr <<< "${{ vars.TF_STANDARD_MODULE_LIST }}" 
 
@@ -48,13 +48,14 @@ jobs:
             REPO_MODULES=$(echo '${{ steps.tf-config-inspect.outputs.config }}' | jq -r -c .module_calls[].source)
         
             echo Checking against the following standard modules: "${arr[@]}"
+
             for userModule in $REPO_MODULES 
             do 
-                echo checking user provided $userModule
+                echo checking user provided "$userModule"
                 for standardModule in "${arr[@]}"
                 do
                     baseModule=${userModule%\?*}
-                    echo extracting base module: $baseModule
+                    echo extracting base module: "$baseModule"
                     if [[ $baseModule == $standardModule ]]; then 
                         FLAG="true"
                         echo found match for "$baseModule"
@@ -66,5 +67,5 @@ jobs:
             if [[ $FLAG == "false" ]]; then 
                 echo One or more user provided modules are not using the standard modules... exiting
                 exit 1;
-            fi
+            fi'
                     
