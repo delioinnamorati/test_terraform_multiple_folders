@@ -32,8 +32,6 @@ jobs:
         with:
           path: terraform/prod
       - name: test output
-        run: |
-          ls /home/runner/work/test_terraform_multiple_folders
-          ls ${{ github.workspace }} 
-          echo "${{ steps.tf-config-inspect.outputs.config}}"
+        run: echo "${{ steps.tf-config-inspect.outputs.config}}" | jq -r -c .module_calls[].source | while read i; do if [[ $i = @("git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2") ]]; then echo "found module"; else echo "module not found" && exit 1; fi; done;
+      
         
