@@ -29,6 +29,7 @@ jobs:
       - name: Setup terraform-config-inspect-action
         run: | 
           ls -la 
-          ls ~/go/bin
+          pwd 
+          ls ~
           mv terraform-config-inspect /usr/bin/terraform-config-inspect
           terraform-config-inspect terraform/prod --json | jq -r -c .module_calls[].source | while read i; do if [[ $i = @("git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2") ]]; then echo "found module"; else echo "module not found" && exit 1; fi; done;
