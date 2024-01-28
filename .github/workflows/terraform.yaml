@@ -28,7 +28,7 @@ jobs:
         with:
          terraform_version: 1.6.0
       - name: Setup JQ
-        uses: sergeysova/jq-action@v2
+        uses: dcarbone/install-jq-action@v1.7.0
       # Checkout the base branch of the pull request (e.g. main/master).
       - name: Setup terraform-config-inspect-action
         uses: clingclangclick/terraform-config-inspect-action@v0
