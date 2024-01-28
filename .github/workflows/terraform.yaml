@@ -21,6 +21,8 @@ jobs:
         shell: bash
 
     steps:
+      - name: checkout_repo
+        uses: actions/checkout@v3
       - name: Setup JQ
         uses: sergeysova/jq-action@v2
       # Checkout the base branch of the pull request (e.g. main/master).
