@@ -25,11 +25,10 @@ jobs:
         uses: sergeysova/jq-action@v2
 
       # Checkout the base branch of the pull request (e.g. main/master).
+      - uses: clingclangclick/terraform-config-inspect-action@v0
       - name: Setup terraform-config-inspect-action
-        uses: clingclangclick/terraform-config-inspect-action@v0
-        
-      - name: mv 
-        run: sudo mv ~/go/bin/terraform-config-inspect /usr/bin/terraform-config-inspect
-
-      - name: Extract and compare modules against known list for prod
-        run: terraform-config-inspect terraform/prod --json | jq -r -c .module_calls[].source | while read i; do if [[ $i = @("git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2") ]]; then echo "found module"; else echo "module not found" && exit 1; fi; done;
+        run: | 
+          ls -la 
+          ls ~/go/bin
+          mv terraform-config-inspect /usr/bin/terraform-config-inspect
+          terraform-config-inspect terraform/prod --json | jq -r -c .module_calls[].source | while read i; do if [[ $i = @("git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2") ]]; then echo "found module"; else echo "module not found" && exit 1; fi; done;
