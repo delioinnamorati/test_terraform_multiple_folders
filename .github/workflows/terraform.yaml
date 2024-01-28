@@ -30,8 +30,7 @@ jobs:
         uses: clingclangclick/terraform-config-inspect-action@v0
         id: tf-config-inspect
         with:
-          path: ${{ github.workspace }}/terraform/prod/
-          # query: gojq -r -c .module_calls[].source
+          path: terraform/prod
       - name: test output
         run: |
           ls /home/runner/work/test_terraform_multiple_folders
