@@ -70,7 +70,7 @@ jobs:
                 exit 1;
             fi' > exec.sh 
       - name: exec check 
-        run: > 
+        run: |
           chmod +x exec.sh
-          /bin/bash exec.sh  
+          ./exec.sh  
                     
