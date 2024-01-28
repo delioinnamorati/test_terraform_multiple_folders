@@ -25,11 +25,12 @@ jobs:
         uses: sergeysova/jq-action@v2
 
       # Checkout the base branch of the pull request (e.g. main/master).
-      - uses: clingclangclick/terraform-config-inspect-action@v0
       - name: Setup terraform-config-inspect-action
-        run: | 
-          ls -la 
-          pwd 
-          ls ~
-          mv terraform-config-inspect /usr/bin/terraform-config-inspect
-          terraform-config-inspect terraform/prod --json | jq -r -c .module_calls[].source | while read i; do if [[ $i = @("git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2") ]]; then echo "found module"; else echo "module not found" && exit 1; fi; done;
+        uses: clingclangclick/terraform-config-inspect-action@v0
+        id: tf-config-inspect
+        with:
+          path: terraform/prod
+          terraform_wrapper: true
+      - name: test output 
+        run: echo "${{ steps.tf-config-inspect.outputs.config}}"
+        
