@@ -68,7 +68,7 @@ jobs:
             if [[ $FLAG == "false" ]]; then 
                 echo One or more user provided modules are not using the standard modules... exiting
                 exit 1;
-            fi' | exec.sh 
+            fi' > exec.sh 
       - name: exec check 
         run: ./exec.sh  
                     
