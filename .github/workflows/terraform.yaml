@@ -72,5 +72,5 @@ jobs:
       - name: exec check 
         run: > 
           chmod +x exec.sh
-          sudo ./exec.sh  
+          /bin/bash exec.sh  
                     
