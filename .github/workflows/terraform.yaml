@@ -23,14 +23,13 @@ jobs:
     steps:
       - name: Setup JQ
         uses: sergeysova/jq-action@v2
-
       # Checkout the base branch of the pull request (e.g. main/master).
       - name: Setup terraform-config-inspect-action
         uses: clingclangclick/terraform-config-inspect-action@v0
         id: tf-config-inspect
         with:
-          path: terraform/prod
-          terraform_wrapper: true
+          path: ${{ github.workspace }}/terraform/prod
+          # query: gojq -r -c .module_calls[].source
       - name: test output 
         run: echo "${{ steps.tf-config-inspect.outputs.config}}"
         
