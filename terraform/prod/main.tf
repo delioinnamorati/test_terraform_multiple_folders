@@ -34,9 +34,11 @@ module "test2" {
   source = "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-sns"
 }
 
+/*
 module "test2" {
   source = "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-rds"
 }
+*/
 resource "aws_vpc" "main" {
   cidr_block = "10.2.0.0/16"
 }
