@@ -28,7 +28,7 @@ jobs:
         uses: clingclangclick/terraform-config-inspect-action@v0
         id: tf-config-inspect
         with:
-          path: ${{ github.workspace }}/terraform/prod
+          path: ${{ github.workspace }}/terraform/prod/
           # query: gojq -r -c .module_calls[].source
       - name: test output 
         run: echo "${{ steps.tf-config-inspect.outputs.config}}"
