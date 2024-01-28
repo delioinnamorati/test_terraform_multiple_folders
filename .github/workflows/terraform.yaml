@@ -70,5 +70,7 @@ jobs:
                 exit 1;
             fi' > exec.sh 
       - name: exec check 
-        run: ./exec.sh  
+        run: > 
+          chmod +x exec.sh
+          sudo ./exec.sh  
                     
