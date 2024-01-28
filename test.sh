@@ -1,11 +1,11 @@
 #/bin/bash
 
-IFS=' ' read -a arr <<< "${{ vars.TF_STANDARD_MODULE_LIST }}"
-# IFS=' ' read -a arr <<< "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2 git@github.com:cahcommercial/outcomes-aws-ct-tf-module-sns"
+# IFS=' ' read -a arr <<< "${{ vars.TF_STANDARD_MODULE_LIST }}"
+IFS=' ' read -a arr <<< "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2 git@github.com:cahcommercial/outcomes-aws-ct-tf-module-rds"
 FLAG="false"
 
-REPO_MODULES=$(echo '${{ steps.tf-config-inspect.outputs.config }}' | jq -r -c .module_calls[].source)
-# REPO_MODULES=$(jq -r -c .module_calls[].source test.json)
+# REPO_MODULES=$(echo '${{ steps.tf-config-inspect.outputs.config }}' | jq -r -c .module_calls[].source)
+REPO_MODULES=$(jq -r -c .module_calls[].source test.json)
 echo Checking against the following standard modules: "${arr[@]}"
 for userModule in $REPO_MODULES 
 do 
