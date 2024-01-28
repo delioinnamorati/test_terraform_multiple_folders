@@ -29,6 +29,10 @@ terraform {
 module "test" {
   source = "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2"
 }
+
+module "test2" {
+  source = "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-sns"
+}
 resource "aws_vpc" "main" {
   cidr_block = "10.2.0.0/16"
 }
