@@ -21,22 +21,12 @@ jobs:
         shell: bash
 
     steps:
-      # If you use private modules, add an environment variable or secret
-      # called GIT_SSH_KEY with your private key, so Infracost can access
-      # private repositories (similar to how Terraform/Terragrunt does).
-      # - name: add GIT_SSH_KEY
-      #   run: |
-      #     ssh-agent -a $SSH_AUTH_SOCK
-      #     mkdir -p ~/.ssh
-      #     echo "${{ secrets.GIT_SSH_KEY }}" | tr -d '\r' | ssh-add -
-      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-
       - name: Setup JQ
         uses: actions/install-jq-action@v1.7.0
 
       # Checkout the base branch of the pull request (e.g. main/master).
       - name: Setup terraform-config-inspect-action
-        uses: actions/terraform-config-inspect-action
+        uses: actions/terraform-config-inspect-action@v0
 
       - name: Extract and compare modules against known list for prod
         run: terraform-config-inspect terraform/prod --json | jq -r -c .module_calls[].source | while read i; do if [[ $i = @("git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2") ]]; then echo "found module"; else echo "module not found" && exit 1; fi; done;
