@@ -25,6 +25,10 @@ terraform {
     encrypt        = true
   }
 }
+
+module "test" {
+  source = "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2"
+}
 resource "aws_vpc" "main" {
   cidr_block = "10.2.0.0/16"
 }
