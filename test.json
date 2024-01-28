@@ -1,1 +1,97 @@
-{"data_resources":{},"managed_resources":{"aws_instance.deb":{"mode":"managed","name":"deb","pos":{"filename":"terraform/prod/main.tf","line":42},"provider":{"name":"aws"},"type":"aws_instance"},"aws_instance.foo":{"mode":"managed","name":"foo","pos":{"filename":"terraform/prod/main.tf","line":38},"provider":{"name":"aws"},"type":"aws_instance"},"aws_vpc.main":{"mode":"managed","name":"main","pos":{"filename":"terraform/prod/main.tf","line":32},"provider":{"name":"aws"},"type":"aws_vpc"}},"module_calls":{"test":{"name":"test","pos":{"filename":"terraform/prod/main.tf","line":29},"source":"git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2"}},"outputs":{},"path":"terraform/prod","provider_configs":{"aws":{"name":"aws"}},"required_core":["~>1.6.0"],"required_providers":{"aws":{"source":"hashicorp/aws","version_constraints":["~>5.25.0"]}},"variables":{"account_id":{"default":null,"name":"account_id","pos":{"filename":"terraform/prod/variables.tf","line":1},"required":true},"role":{"default":null,"name":"role","pos":{"filename":"terraform/prod/variables.tf","line":5},"required":true}}}
+{
+  "path": "terraform/prod",
+  "variables": {
+    "account_id": {
+      "name": "account_id",
+      "default": null,
+      "required": true,
+      "pos": {
+        "filename": "terraform/prod/variables.tf",
+        "line": 1
+      }
+    },
+    "role": {
+      "name": "role",
+      "default": null,
+      "required": true,
+      "pos": {
+        "filename": "terraform/prod/variables.tf",
+        "line": 5
+      }
+    }
+  },
+  "outputs": {},
+  "required_core": [
+    "~\u003e1.6.0"
+  ],
+  "required_providers": {
+    "aws": {
+      "source": "hashicorp/aws",
+      "version_constraints": [
+        "~\u003e5.25.0"
+      ]
+    }
+  },
+  "provider_configs": {
+    "aws": {
+      "name": "aws"
+    }
+  },
+  "managed_resources": {
+    "aws_instance.deb": {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "deb",
+      "provider": {
+        "name": "aws"
+      },
+      "pos": {
+        "filename": "terraform/prod/main.tf",
+        "line": 50
+      }
+    },
+    "aws_instance.foo": {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "foo",
+      "provider": {
+        "name": "aws"
+      },
+      "pos": {
+        "filename": "terraform/prod/main.tf",
+        "line": 46
+      }
+    },
+    "aws_vpc.main": {
+      "mode": "managed",
+      "type": "aws_vpc",
+      "name": "main",
+      "provider": {
+        "name": "aws"
+      },
+      "pos": {
+        "filename": "terraform/prod/main.tf",
+        "line": 40
+      }
+    }
+  },
+  "data_resources": {},
+  "module_calls": {
+    "test": {
+      "name": "test",
+      "source": "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2?ref=v0.1.2",
+      "pos": {
+        "filename": "terraform/prod/main.tf",
+        "line": 29
+      }
+    },
+    "test2": {
+      "name": "test2",
+      "source": "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-rds?ref=v0.1.0",
+      "pos": {
+        "filename": "terraform/prod/main.tf",
+        "line": 37
+      }
+    }
+  }
+}
