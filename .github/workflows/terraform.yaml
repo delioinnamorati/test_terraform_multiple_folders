@@ -40,7 +40,6 @@ jobs:
       - name: test output
         run: | 
           echo ${{ steps.tf-config-inspect.outputs.config }} >> test.json
-          cat test.json
-          jq -r -c .module_calls[].source test.json | while read i; do if [[ $i = @("git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2") ]]; then echo "found module"; else echo "module not found" && exit 1; fi; done;
+          jq -r -R -c .module_calls[].source test.json | while read i; do if [[ $i = @("git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2") ]]; then echo "found module"; else echo "module not found" && exit 1; fi; done;
       
         
