@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Setup JQ
-        uses: actions/install-jq-action
+        uses: sergeysova/jq-action@v2
 
       # Checkout the base branch of the pull request (e.g. main/master).
       - name: Setup terraform-config-inspect-action
