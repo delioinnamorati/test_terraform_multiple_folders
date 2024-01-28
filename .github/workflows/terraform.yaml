@@ -23,6 +23,10 @@ jobs:
     steps:
       - name: checkout_repo
         uses: actions/checkout@v3
+      - name: Setup Terraform with specified version on the runner
+        uses: hashicorp/setup-terraform@v2
+        with:
+         terraform_version: 1.6.0
       - name: Setup JQ
         uses: sergeysova/jq-action@v2
       # Checkout the base branch of the pull request (e.g. main/master).
