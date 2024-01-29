@@ -11,84 +11,71 @@ on:
    - main
    paths:
    - terraform/**
-env:
-  # If you use private modules you'll need this env variable to use
-  # the same ssh-agent socket value across all jobs & steps.
-  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-  TF_ROOT: ./terraform/prod
-  TF_LOG: INFO
-  # If you're using Terraform Cloud/Enterprise and have variables or private modules stored
-  # on there, specify the following to automatically retrieve the variables:
-  #   INFRACOST_TERRAFORM_CLOUD_TOKEN: ${{ secrets.TFC_TOKEN }}
-  #   INFRACOST_TERRAFORM_CLOUD_HOST: app.terraform.io # Change this if you're using Terraform Enterprise
-
 
 jobs:
-  infracost:
-    name: Infracost
+  terraform:
+    name: "Terraform Infrastructure Change Management"
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      # Required to post comments
-      pull-requests: write
     defaults:
       run:
         shell: bash
 
     steps:
-      # If you use private modules, add an environment variable or secret
-      # called GIT_SSH_KEY with your private key, so Infracost can access
-      # private repositories (similar to how Terraform/Terragrunt does).
-      # - name: add GIT_SSH_KEY
-      #   run: |
-      #     ssh-agent -a $SSH_AUTH_SOCK
-      #     mkdir -p ~/.ssh
-      #     echo "${{ secrets.GIT_SSH_KEY }}" | tr -d '\r' | ssh-add -
-      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      - name: Setup Infracost
-        uses: infracost/actions/setup@v2
-        # See https://github.com/infracost/actions/tree/master/setup for other inputs
-        # If you can't use this action, see Docker images in https://infracost.io/cicd
+      - name: checkout_repo
+        uses: actions/checkout@v3
+      - name: Setup Terraform with specified version on the runner
+        uses: hashicorp/setup-terraform@v2
         with:
-          api-key: ${{ secrets.INFRACOST_API_KEY }}
-
+         terraform_version: 1.6.0
+      - name: Setup JQ
+        if: ${{ hashFiles('terraform/fluffle/main.tf') != '' }}
+        uses: dcarbone/install-jq-action@v2 
+        with: 
+          version: '1.7'
       # Checkout the base branch of the pull request (e.g. main/master).
-      - name: Checkout base branch
-        uses: actions/checkout@v3
+      - name: Setup terraform-config-inspect-action
+        if: ${{ hashFiles('terraform/fluffle/main.tf') != '' }}
+        uses: clingclangclick/terraform-config-inspect-action@v0
+        id: tf-config-inspect
         with:
-          ref: '${{ github.event.pull_request.base.ref }}'
-
-      # Generate Infracost JSON file as the baseline.
-      - name: Generate Infracost cost estimate baseline
+          path: terraform/prod
+      - name: save output
+        if: ${{ hashFiles('terraform/fluffle/main.tf') != '' }}
         run: |
-          infracost breakdown --path=${TF_ROOT} \
-                              --format=json \
-                              --out-file=/tmp/infracost-base.json
+            echo '${{ steps.tf-config-inspect.outputs.config }}' | jq -r -c .module_calls[].source > repo_modules.json
+            echo '\
+            #/bin/bash
 
-      # Checkout the current PR branch so we can create a diff.
-      - name: Checkout PR branch
-        uses: actions/checkout@v3
+            IFS=" " read -a arr <<< "${{ vars.TF_STANDARD_MODULE_LIST }}" 
 
-      # Generate an Infracost diff and save it to a JSON file.
-      - name: Generate Infracost diff
+            FLAG="false"
+
+            REPO_MODULES=$(cat repo_modules.json)
+        
+            echo Checking against the following standard modules: "${arr[@]}"
+
+            for userModule in $REPO_MODULES 
+            do 
+                echo checking user provided "$userModule"
+                for standardModule in "${arr[@]}"
+                do
+                    baseModule=${userModule%\?*}
+                    echo extracting base module: "$baseModule"
+                    if [[ $baseModule == $standardModule ]]; then 
+                        FLAG="true"
+                        echo found match for "$baseModule"
+                        break 
+                    fi
+                    FLAG="false"
+                done
+            done
+            if [[ $FLAG == "false" ]]; then 
+                echo One or more user provided modules are not using the standard modules... exiting
+                exit 1;
+            fi' > exec.sh 
+      - name: exec check
+        if: ${{ hashFiles('terraform/fluffle/main.tf') != '' }} 
         run: |
-          infracost diff --path=${TF_ROOT} \
-                          --format=json \
-                          --compare-to=/tmp/infracost-base.json \
-                          --out-file=/tmp/infracost.json
-
-      # Posts a comment to the PR using the 'update' behavior.
-      # This creates a single comment and updates it. The "quietest" option.
-      # The other valid behaviors are:
-      #   delete-and-new - Delete previous comments and create a new one.
-      #   hide-and-new - Minimize previous comments and create a new one.
-      #   new - Create a new cost estimate comment on every push.
-      # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
-      - name: Post Infracost comment
-        run: |
-            infracost comment github --path=/tmp/infracost.json \
-                                     --repo=$GITHUB_REPOSITORY \
-                                     --github-token=${{github.token}} \
-                                     --pull-request=${{github.event.pull_request.number}} \
-                                     --behavior=update
+          chmod +x exec.sh
+          ./exec.sh  
+                    

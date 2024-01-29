@@ -25,6 +25,20 @@ terraform {
     encrypt        = true
   }
 }
+# test
+module "test" {
+  source = "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2"
+}
+
+module "test2" {
+  source = "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-sns"
+}
+
+/*
+module "test2" {
+  source = "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-rds"
+}
+*/
 resource "aws_vpc" "main" {
   cidr_block = "10.2.0.0/16"
 }
@@ -32,6 +46,10 @@ resource "aws_vpc" "main" {
   #cidr_block = "10.2.0.0/16"
 #}
 resource "aws_instance" "foo" {
+  ami           = "ami-0ff8a91507f77f867"
+  instance_type = "t1.2xlarge" # invalid type!
+}
+resource "aws_instance" "deb" {
   ami           = "ami-0ff8a91507f77f867"
   instance_type = "t1.2xlarge" # invalid type!
 }

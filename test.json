@@ -1,0 +1,97 @@
+{
+  "path": "terraform/prod",
+  "variables": {
+    "account_id": {
+      "name": "account_id",
+      "default": null,
+      "required": true,
+      "pos": {
+        "filename": "terraform/prod/variables.tf",
+        "line": 1
+      }
+    },
+    "role": {
+      "name": "role",
+      "default": null,
+      "required": true,
+      "pos": {
+        "filename": "terraform/prod/variables.tf",
+        "line": 5
+      }
+    }
+  },
+  "outputs": {},
+  "required_core": [
+    "~\u003e1.6.0"
+  ],
+  "required_providers": {
+    "aws": {
+      "source": "hashicorp/aws",
+      "version_constraints": [
+        "~\u003e5.25.0"
+      ]
+    }
+  },
+  "provider_configs": {
+    "aws": {
+      "name": "aws"
+    }
+  },
+  "managed_resources": {
+    "aws_instance.deb": {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "deb",
+      "provider": {
+        "name": "aws"
+      },
+      "pos": {
+        "filename": "terraform/prod/main.tf",
+        "line": 50
+      }
+    },
+    "aws_instance.foo": {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "foo",
+      "provider": {
+        "name": "aws"
+      },
+      "pos": {
+        "filename": "terraform/prod/main.tf",
+        "line": 46
+      }
+    },
+    "aws_vpc.main": {
+      "mode": "managed",
+      "type": "aws_vpc",
+      "name": "main",
+      "provider": {
+        "name": "aws"
+      },
+      "pos": {
+        "filename": "terraform/prod/main.tf",
+        "line": 40
+      }
+    }
+  },
+  "data_resources": {},
+  "module_calls": {
+    "test": {
+      "name": "test",
+      "source": "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-ec2?ref=v0.1.2",
+      "pos": {
+        "filename": "terraform/prod/main.tf",
+        "line": 29
+      }
+    },
+    "test2": {
+      "name": "test2",
+      "source": "git@github.com:cahcommercial/outcomes-aws-ct-tf-module-rds?ref=v0.1.0",
+      "pos": {
+        "filename": "terraform/prod/main.tf",
+        "line": 37
+      }
+    }
+  }
+}

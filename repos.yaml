@@ -56,9 +56,6 @@ workflows:
     plan: 
       steps:
         - init
-        #- env:
-            #name: REPO_NAME
-            #command: 'if [ "${BASE_REPO_NAME}" = "test_terraform_multiple_folders" ]; then echo exiting && exit 1; fi;'
         - env:
             name: S3_ACCOUNT_ID
             command: '/home/delio/test_terraform_multiple_folders/s3_account_id.sh "${BASE_REPO_NAME}"'
@@ -67,8 +64,7 @@ workflows:
             name: TF_ACCOUNT_ID
             command: '/home/delio/test_terraform_multiple_folders/tf_account_id.sh'
   
-        - run: echo "${TF_ACCOUNT_ID}" "${S3_ACCOUNT_ID}"
-        - run: 'if [ "${S3_ACCOUNT_ID}" != "${TF_ACCOUNT_ID}" ]; then echo they match!!! && exit 1; fi;'
+        - run: 'if [ "${S3_ACCOUNT_ID}" != "${TF_ACCOUNT_ID}" ]; then echo The AWS account assigned for the repository does not match the Terraform AWS account, exiting... && exit 1; fi;'
         - plan: 
             extra_args:
               - -input=false
