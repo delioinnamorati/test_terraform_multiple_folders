@@ -22,26 +22,26 @@ jobs:
 
     steps:
       - name: checkout_repo
-        if: ${{ hashFiles('terraform/fluffle/main.tf') != '' }}
+        if: ${{ hashFiles('terraform/prod/main.tf') != '' }}
         uses: actions/checkout@v3
       - name: Setup Terraform with specified version on the runner
         uses: hashicorp/setup-terraform@v2
         with:
          terraform_version: 1.6.0
       - name: Setup JQ
-        if: ${{ hashFiles('terraform/fluffle/main.tf') != '' }}
+        if: ${{ hashFiles('terraform/prod/main.tf') != '' }}
         uses: dcarbone/install-jq-action@v2 
         with: 
           version: '1.7'
       # Checkout the base branch of the pull request (e.g. main/master).
       - name: Setup terraform-config-inspect-action
-        if: ${{ hashFiles('terraform/fluffle/main.tf') != '' }}
+        if: ${{ hashFiles('terraform/prod/main.tf') != '' }}
         uses: clingclangclick/terraform-config-inspect-action@v0
         id: tf-config-inspect
         with:
           path: terraform/prod
       - name: save output
-        if: ${{ hashFiles('terraform/fluffle/main.tf') != '' }}
+        if: ${{ hashFiles('terraform/prod/main.tf') != '' }}
         run: |
             echo '${{ steps.tf-config-inspect.outputs.config }}' | jq -r -c .module_calls[].source > repo_modules.json
             echo '\
@@ -75,7 +75,7 @@ jobs:
                 exit 1;
             fi' > exec.sh 
       - name: exec check
-        if: ${{ hashFiles('terraform/fluffle/main.tf') != '' }} 
+        if: ${{ hashFiles('terraform/prod/main.tf') != '' }} 
         run: |
           chmod +x exec.sh
           ./exec.sh  
